@@ -14,7 +14,7 @@ app.use(cors())
 app.use(express.json())
 
 // db config
-const mongoURI = "mongodb://nogs:mari1981@cluster0-shard-00-00.dheig.mongodb.net:27017,cluster0-shard-00-01.dheig.mongodb.net:27017,cluster0-shard-00-02.dheig.mongodb.net:27017/discordDB?ssl=true&replicaSet=atlas-rtgkz7-shard-0&authSource=admin&retryWrites=true&w=majority";
+const mongoURI = "";
 
 mongoose.connect(mongoURI, {
   useCreateIndex: true,

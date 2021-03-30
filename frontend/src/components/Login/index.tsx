@@ -4,24 +4,22 @@ import { CSSTransition } from 'react-transition-group'
 
 import { Container, Bgc } from './styles';
 
-const Login: React.FC = () => {
-  interface Iinputs {
+const Login: React.FC = () => {   
+  interface iPlaPo {
     email: string;
     password: string;
     username: string;
     emailRegister: string;
     passwordRegister: string;
   }
-  
-  const initializeValue: Iinputs[] = [
-    {
+
+  const initializeValue: iPlaPo = {
       email: "",
       password: "",
       username: "",
       emailRegister: "",
       passwordRegister: "",
-    }
-  ]
+  }
 
   const [MenuNow, setMenuNow] = useState('login')
   const [error1, setError1] = useState('')
@@ -34,7 +32,19 @@ const Login: React.FC = () => {
   }
 
   const handleCreateAccount = () => {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
+    if (inputs.username.length < 4) {
+      console.log('name is lower')
+    }
+
+    if (inputs.username.length < 4) {
+      console.log('password is lower')
+    }
+
+    if (!re.test(String(inputs.emailRegister).toLowerCase())) {
+      console.log('email is not valid')
+    } else
   }
 
   return (
@@ -83,7 +93,7 @@ const Login: React.FC = () => {
             <input type="password" name="password"  onChange={handleChange} value={inputs.passwordRegister}/>
           </div>
 
-          <button>Continue</button>
+          <button onClick={() => handleCreateAccount()}>Continue</button>
           <p><span onClick={() => setMenuNow('login')}>Already have an account?</span></p>
         </main>
       </CSSTransition>
