@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 
-const discordSchema = new mongoose.Schema({
+const channelSchema = new mongoose.Schema({
   channelName: String,
   conversation: [
     {
@@ -12,4 +12,4 @@ const discordSchema = new mongoose.Schema({
   ],
 })
 
-export default mongoose.model('conversarions', discordSchema)
+export default mongoose.model('conversations', channelSchema)

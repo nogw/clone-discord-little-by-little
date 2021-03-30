@@ -5,8 +5,38 @@ import { CSSTransition } from 'react-transition-group'
 import { Container, Bgc } from './styles';
 
 const Login: React.FC = () => {
-  const [MenuNow, setMenuNow] = useState('login')
+  interface Iinputs {
+    email: string;
+    password: string;
+    username: string;
+    emailRegister: string;
+    passwordRegister: string;
+  }
   
+  const initializeValue: Iinputs[] = [
+    {
+      email: "",
+      password: "",
+      username: "",
+      emailRegister: "",
+      passwordRegister: "",
+    }
+  ]
+
+  const [MenuNow, setMenuNow] = useState('login')
+  const [error1, setError1] = useState('')
+  const [inputs, setInputs] = useState(initializeValue)
+
+  const handleChange = (e: any) => {
+    const {name, value} = e.target
+    console.log(inputs)
+    setInputs(prev => ({...prev, [name]: value}))
+  }
+
+  const handleCreateAccount = () => {
+
+  }
+
   return (
     <Container>
       <CSSTransition 
@@ -21,13 +51,14 @@ const Login: React.FC = () => {
 
           <div className="input">
             <label htmlFor="email">EMAIL</label>
-            <input type="text" name="email"/>
+            <input type="text" name="email" onChange={handleChange} value={inputs.email}/>
           </div>
           <div className="input">
             <label htmlFor="password">PASSWORD</label>
-            <input type="password" name="password"/>
+            <input type="password" name="password" onChange={handleChange} value={inputs.password}/>
           </div>
           <button>Login</button>
+          <h1>An account unnexist</h1>
           <p>Need an account? <span onClick={() => setMenuNow('register')}>Register</span></p>
         </main>
       </CSSTransition>
@@ -40,16 +71,16 @@ const Login: React.FC = () => {
         <main>
           <h1>Create an account</h1>
           <div className="input">
-            <label htmlFor="email">EMAIL</label>
-            <input type="text" name="email"/>
+            <label htmlFor="username">USERNAME</label>
+            <input type="text" name="username"  onChange={handleChange} value={inputs.username}/>
           </div>
           <div className="input">
-            <label htmlFor="username">USERNAME</label>
-            <input type="text" name="username"/>
+            <label htmlFor="email">EMAIL</label>
+            <input type="text" name="email"  onChange={handleChange} value={inputs.emailRegister}/>
           </div>
           <div className="input">
             <label htmlFor="password">PASSWORD</label>
-            <input type="password" name="password"/>
+            <input type="password" name="password"  onChange={handleChange} value={inputs.passwordRegister}/>
           </div>
 
           <button>Continue</button>
