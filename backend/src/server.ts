@@ -4,6 +4,8 @@ import cors from "cors"
 import Pusher from "pusher"
 import channelSchema from "./models/Channel";
 import User from './models/User'
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
 
 // app config
 const port = process.env.PORT || 8000
@@ -35,38 +37,61 @@ app.get("/", (req: Request, res: Response) => res.status(200).send("testing"))
 
 // later I add a simple password encryption, but for now I will pass it directly
 app.post("/register", (req: Request, res: Response) => {
-  let user = new User({
-    name: req.body.name,
-    email: req.body.email,
-    password: req.body.password,
-  })
-
-  console.log(req.body.name)
-  user.save()
-  .then((user: any) => {
-    res.status(201).json({
-      message: 'User added'
+  bcrypt.hash(req.body.password, 10, function(err: any, hashedPass: any) {
+    if (err) {
+      res.json({
+        error: err
+      })
+    }
+    let user = new User({
+      name: req.body.name,
+      email: req.body.email,
+      password: hashedPass,
     })
-  })
-  .catch((error: any) => {
-    res.status(500).json({
-      message: 'An error occured',
-      errorMessage: error
+    user.save()
+    .then((user: any) => {
+      res.status(201).json({
+        message: 'User added'
+      })
+    })
+    .catch((error: any) => {
+      res.status(500).json({
+        message: 'An error occured',
+        errorMessage: error
+      })
     })
   })
 })
 
 app.post("/login", (req: Request, res: Response) => {
-  var email = req.body.email
+  var emailField = req.body.email
   var password = req.body.password
 
-  User.find({ email: email })
+  User.findOne({$or: [{email: emailField}]})
   .then((user: any) => {
-    if (user) {
-      console.log(user)
+    if(user) {
+      bcrypt.compare(password, user.password, function(err, result) {
+        if (err) {
+          res.status(500).json({
+            errorMessage: err
+          })
+        }
+
+        if(result) {
+          let token = jwt.sign({ name: user.name }, 'secretValue')
+          res.json({
+            message: 'Login successful', 
+            token
+          })
+        } else {
+          res.json ({
+            message: "Password does not matched!"
+          })
+        }
+      })
     } else {
-      res.json({
-        message: 'No user found'
+      res.status(500).json({
+        errorMessage: 'No user found',
       })
     }
   })
