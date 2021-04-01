@@ -79,6 +79,7 @@ app.post("/login", (req: Request, res: Response) => {
 
         if(result) {
           let token = jwt.sign({ name: user.name }, 'secretValue')
+          
           res.json({
             message: 'Login successful', 
             token

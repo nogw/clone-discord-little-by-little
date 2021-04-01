@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-
 import { CSSTransition } from 'react-transition-group'
-
 import { Container, Bgc } from './styles';
+import api from '../../services/api'
+import jwt from 'jsonwebtoken'
 
 const Login: React.FC = () => {   
-  interface iPlaPo {
+  interface IInputs {
     email: string;
     password: string;
     username: string;
@@ -13,7 +13,7 @@ const Login: React.FC = () => {
     passwordRegister: string;
   }
 
-  const initializeValue: iPlaPo = {
+  const initializeValue: IInputs = {
       email: "",
       password: "",
       username: "",
@@ -31,20 +31,44 @@ const Login: React.FC = () => {
     setInputs(prev => ({...prev, [name]: value}))
   }
 
+  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  
   const handleCreateAccount = () => {
-    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    inputs.username.length <= 2 && console.log('name is lower')
+    !re.test(String(inputs.emailRegister).toLowerCase()) && console.log('email is not valid')
+    inputs.passwordRegister.length <= 7 && console.log('password is lower')
+  
+    if (inputs.username.length > 2 && inputs.passwordRegister.length > 7 && re.test(String(inputs.emailRegister).toLowerCase())) {
 
-    if (inputs.username.length < 4) {
-      console.log('name is lower')
+      //create a new user in db
+      const newUser = async () => {
+        const response = await api.post('/register', {
+          name: inputs.username,
+          email: inputs.emailRegister,
+          password: inputs.passwordRegister,
+        }).then((user) => console.log(user.data))
+      }
+
+      newUser()
     }
+  }
 
-    if (inputs.username.length < 4) {
-      console.log('password is lower')
+  const handleLogin = () => {
+    !re.test(String(inputs.email).toLowerCase()) && console.log('email is not valid')
+    inputs.password.length <= 7 && console.log('password is lower')
+  
+    if (inputs.password.length > 7 && re.test(String(inputs.emailRegister).toLowerCase())) {
+      
+      //login
+      const Login = async () => {
+        const response = await api.post('/login', {
+          email: inputs.email,
+          password: inputs.password,
+        }).then((user) => console.log(jwt.decode(user.data.token)))
+      }
+
+      Login()
     }
-
-    if (!re.test(String(inputs.emailRegister).toLowerCase())) {
-      console.log('email is not valid')
-    } else
   }
 
   return (
@@ -67,8 +91,7 @@ const Login: React.FC = () => {
             <label htmlFor="password">PASSWORD</label>
             <input type="password" name="password" onChange={handleChange} value={inputs.password}/>
           </div>
-          <button>Login</button>
-          <h1>An account unnexist</h1>
+          <button onClick={handleLogin}>Login</button>
           <p>Need an account? <span onClick={() => setMenuNow('register')}>Register</span></p>
         </main>
       </CSSTransition>
@@ -86,14 +109,14 @@ const Login: React.FC = () => {
           </div>
           <div className="input">
             <label htmlFor="email">EMAIL</label>
-            <input type="text" name="email"  onChange={handleChange} value={inputs.emailRegister}/>
+            <input type="text" name="emailRegister"  onChange={handleChange} value={inputs.emailRegister}/>
           </div>
           <div className="input">
             <label htmlFor="password">PASSWORD</label>
-            <input type="password" name="password"  onChange={handleChange} value={inputs.passwordRegister}/>
+            <input type="password" name="passwordRegister" onChange={handleChange} value={inputs.passwordRegister}/>
           </div>
 
-          <button onClick={() => handleCreateAccount()}>Continue</button>
+          <button onClick={handleCreateAccount}>Continue</button>
           <p><span onClick={() => setMenuNow('login')}>Already have an account?</span></p>
         </main>
       </CSSTransition>
