@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { CSSTransition } from 'react-transition-group'
 import { Container, Bgc } from './styles';
 import api from '../../services/api'
-import jwt from 'jsonwebtoken'
+const jwt =  require('jsonwebtoken')
 
 const Login: React.FC = () => {   
   interface IInputs {

@@ -11,6 +11,12 @@ const userSchema = new Schema(
     },
     password: {
       type: String
+    },
+    passwordConfirm: {
+      type: String
+    },
+    avatarColor: {
+      type: Number
     }
   }, 
   {
