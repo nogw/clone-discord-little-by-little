@@ -9,6 +9,7 @@ import {
   IconMic,
   IconHeadset,
   IconCog,
+  IconProfile,
 } from './styles';
 
 const Sidebar: React.FC = () => {
@@ -22,7 +23,9 @@ const Sidebar: React.FC = () => {
       <SubChats/>
 
       <UserContainer>
-        <img src="https://i.ytimg.com/vi/26QraleGyqc/maxresdefault.jpg" alt="user"/>
+        <IconProfile>
+          <img src="https://i.ytimg.com/vi/26QraleGyqc/maxresdefault.jpg" alt="user"/>
+        </IconProfile>
         <div className="texts">
           <h1>noge</h1>
           <p>noge #2124</p>

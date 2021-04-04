@@ -9,6 +9,20 @@ export const Container = styled.div`
   width: 100%;
 `;
 
+export const IconProfile = styled.div`
+  height: 32px;
+  width: 32px;
+
+  img {
+    height: 24px;
+    width: 24px;
+    margin-right: 8px;
+    margin-left: 4px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+`;
+
 export const HeaderSidebar = styled.div`
   background-color: #2E3036;
   display: flex;
@@ -53,15 +67,6 @@ export const UserContainer = styled.div`
       font-size: 0.8rem;
       text-transform: uppercase;
     }
-  }
-
-  img {
-    height: 32px;
-    width: 32px;
-    margin-right: 8px;
-    margin-left: 4px;
-    border-radius: 50%;
-    object-fit: cover;
   }
 `;
 

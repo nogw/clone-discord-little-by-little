@@ -3,6 +3,8 @@ import DiscordLayout from './components/DiscordLayout';
 import Login from './components/Login';
 import GlobalStyle from './styles/GlobalStyle';
 import { Context } from './UserProvider'
+import dotenv from 'dotenv'
+dotenv.config()
 
 function App() {
   const [user, setUser] = useContext(Context);
@@ -10,7 +12,14 @@ function App() {
   return (
     <>
       {/* <DiscordLayout /> */}
-      <Login/>
+      {
+        user ? (
+          <DiscordLayout />
+        ) : (  
+          <Login/>
+        )
+      }
+      {/* <DiscordLayout/> */}
       <GlobalStyle />
     </>
   );

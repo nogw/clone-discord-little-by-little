@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { CSSTransition } from 'react-transition-group'
-import { Container, Bgc } from './styles';
+import { Container } from './styles';
 import api from '../../services/api'
-const jwt =  require('jsonwebtoken')
+import jwtDecode from 'jwt-decode';
+import { Context } from '../../UserProvider'
 
 const Login: React.FC = () => {   
   interface IInputs {
@@ -11,19 +12,21 @@ const Login: React.FC = () => {
     username: string;
     emailRegister: string;
     passwordRegister: string;
+    passwordRegisterConfirm: string;
   }
 
   const initializeValue: IInputs = {
       email: "",
       password: "",
-      username: "",
-      emailRegister: "",
-      passwordRegister: "",
+      username: "nogw",
+      emailRegister: "gabrielnogueiraoliveira@gmail.com",
+      passwordRegister: "mari1981",
+      passwordRegisterConfirm: "mari1981",
   }
 
   const [MenuNow, setMenuNow] = useState('login')
-  const [error1, setError1] = useState('')
   const [inputs, setInputs] = useState(initializeValue)
+  const [user, setUser] = useContext(Context)
 
   const handleChange = (e: any) => {
     const {name, value} = e.target
@@ -39,14 +42,20 @@ const Login: React.FC = () => {
     inputs.passwordRegister.length <= 7 && console.log('password is lower')
   
     if (inputs.username.length > 2 && inputs.passwordRegister.length > 7 && re.test(String(inputs.emailRegister).toLowerCase())) {
-
       //create a new user in db
       const newUser = async () => {
-        const response = await api.post('/register', {
+        await api.post('/register', {
           name: inputs.username,
           email: inputs.emailRegister,
           password: inputs.passwordRegister,
-        }).then((user) => console.log(user.data))
+          passwordConfirm: inputs.passwordRegisterConfirm,
+        })
+        .then((user) => {
+          console.log(user.data)
+        })
+        .catch((err) => {
+          console.log(err.response.data)
+        })
       }
 
       newUser()
@@ -58,13 +67,20 @@ const Login: React.FC = () => {
     inputs.password.length <= 7 && console.log('password is lower')
   
     if (inputs.password.length > 7 && re.test(String(inputs.emailRegister).toLowerCase())) {
-      
       //login
       const Login = async () => {
-        const response = await api.post('/login', {
+        await api.post('/login', {
           email: inputs.email,
           password: inputs.password,
-        }).then((user) => console.log(jwt.decode(user.data.token)))
+        })
+        .then((user) => {
+          const decoded: any = jwtDecode(user.data.token)
+          console.log(decoded)
+          setUser(decoded)
+        })
+        .catch((err) => {
+          console.log(err.response.data)
+        })
       }
 
       Login()
@@ -114,6 +130,10 @@ const Login: React.FC = () => {
           <div className="input">
             <label htmlFor="password">PASSWORD</label>
             <input type="password" name="passwordRegister" onChange={handleChange} value={inputs.passwordRegister}/>
+          </div>
+          <div className="input">
+            <label htmlFor="passwordRegisterConfirm">PASSWORD CONFIRM</label>
+            <input type="password" name="passwordRegisterConfirm" onChange={handleChange} value={inputs.passwordRegisterConfirm}/>
           </div>
 
           <button onClick={handleCreateAccount}>Continue</button>
